@@ -1,11 +1,11 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int size;
+    private final int size;
     private boolean[][] grid;
-    private WeightedQuickUnionUF uf;
-    private int top;
-    private int bottom;
+    private final WeightedQuickUnionUF uf;
+    private final int top;
+    private final int bottom;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -66,7 +66,7 @@ public class Percolation {
         int count = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (isOpen(i, j)) {
+                if (isOpen(i + 1, j + 1)) {
                     count++;
                 }
             }
@@ -86,12 +86,7 @@ public class Percolation {
 
     private void isIndiceOK(int i, int j) {
         if (i < 1 || i > size || j < 1 || j > size) {
-            throw new IllegalArgumentException("Indices must be in the range of [1, size]");
+            throw new IllegalArgumentException("Indices must be in the range of [1, n]");
         }
-    }
-
-    // test client (optional)
-    public static void main(String[] args) {
-
     }
 }

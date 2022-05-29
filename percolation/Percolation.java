@@ -23,40 +23,42 @@ public class Percolation {
 
     // opens the site (i, j) if it is not open already
     public void open(int i, int j) {
-        grid[i][j] = true;
+        isIndiceOK(i, j);
 
-        if (i == 0) {
+        grid[i - 1][j - 1] = true;
+
+        if (i == 1) {
             uf.union(getIndex(i, j), top);
         }
-        if (i == size - 1) {
+        if (i == size) {
             uf.union(getIndex(i, j), bottom);
         }
-        if (i > 0 && isOpen(i - 1, j)) {
+        if (i > 1 && isOpen(i - 1, j)) {
             uf.union(getIndex(i, j), getIndex(i - 1, j));
         }
-        if (i < size - 1 && isOpen(i + 1, j)) {
+        if (i < size && isOpen(i + 1, j)) {
             uf.union(getIndex(i, j), getIndex(i + 1, j));
         }
-        if (j > 0 && isOpen(i, j - 1)) {
+        if (j > 1 && isOpen(i, j - 1)) {
             uf.union(getIndex(i, j), getIndex(i, j - 1));
         }
-        if (j < size - 1 && isOpen(i, j + 1)) {
+        if (j < size && isOpen(i, j + 1)) {
             uf.union(getIndex(i, j), getIndex(i, j + 1));
         }
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int i, int j) {
-        return grid[i][j];
+        isIndiceOK(i, j);
+
+        return grid[i - 1][j - 1];
     }
 
     // is the site (row, col) full?
     public boolean isFull(int i, int j) {
-        if (i >= 0 && i < size && j >= 0 && j < size) {
-            return uf.find(top) == uf.find(getIndex(i, j));
-        } else {
-            throw new IndexOutOfBoundsException();
-        }
+        isIndiceOK(i, j);
+
+        return uf.find(top) == uf.find(getIndex(i, j));
     }
 
     // returns the number of open sites
@@ -79,7 +81,13 @@ public class Percolation {
     }
 
     private int getIndex(int i, int j) {
-        return size * i + j + 1;
+        return size * (i - 1) + j;
+    }
+
+    private void isIndiceOK(int i, int j) {
+        if (i < 1 || i > size || j < 1 || j > size) {
+            throw new IllegalArgumentException("Indices must be in the range of [1, size]");
+        }
     }
 
     // test client (optional)

@@ -29,7 +29,7 @@ public class Deque<Item> implements Iterable<Item> {
         return size;
     }
 
-    private void checkNull(Item item) {
+    private void assertNotNull(Item item) {
         if (item == null)
             throw new IllegalArgumentException();
     }
@@ -57,7 +57,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the front
     public void addFirst(Item item) {
-        checkNull(item);
+        assertNotNull(item);
         if (size == 0) {
             addTheFirstItem(item);
             return;
@@ -70,7 +70,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // add the item to the back
     public void addLast(Item item) {
-        checkNull(item);
+        assertNotNull(item);
         if (size == 0) {
             addTheFirstItem(item);
             return;

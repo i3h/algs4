@@ -1,5 +1,3 @@
-package main.java.com.github.i3h.algs4.queues;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

@@ -1,5 +1,3 @@
-package main.java.com.github.i3h.algs4.queues;
-
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;

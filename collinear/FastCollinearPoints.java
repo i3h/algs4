@@ -12,6 +12,8 @@ public class FastCollinearPoints {
         for (int i = 0; i < points.length; i++)
             checkSegment(points, i);
 
+        if (num == 0)
+            return;
         segments = new LineSegment[num];
         System.arraycopy(segmentsCache, 0, segments, 0, num);
     }
@@ -21,8 +23,14 @@ public class FastCollinearPoints {
         Point p = points[i];
         Point[] pointsCopy = new Point[n];
         System.arraycopy(points, 0, pointsCopy, 0, n);
-        Arrays.sort(pointsCopy);
+        Arrays.sort(pointsCopy, 0, n - 1, p.slopeOrder());
 
+//        System.out.println("+++++++++++++++++++++++++");
+//        for (Point s : pointsCopy) {
+//            System.out.println(s.toString());
+//        }
+
+        System.out.println("+++++++++++++++++++++++++");
         int count = 0;
         double slope = Double.NEGATIVE_INFINITY;
         for (int j = 0; j < n; j++) {
@@ -30,14 +38,20 @@ public class FastCollinearPoints {
                 continue;
 
             double tmp = p.slopeTo(pointsCopy[j]);
-            if (tmp != slope)
-                slope = tmp;
-            if (tmp == slope)
-                count++;
-            if (count > 1)
-                addLineSegment(points, p, slope);
+            System.out.println(tmp);
+//            if (tmp != slope)
+//                slope = tmp;
+//            if (tmp == slope)
+//                count++;
+////            if (count > 1)
+////                addLineSegment(points, p, slope);
+//            if (count > 3) {
+//                System.out.println(p.toString());
+//                System.out.println(slope);
+//                p.drawTo(pointsCopy[j]);
+//                count = 0;
+//            }
         }
-
     }
 
     private void addLineSegment(Point[] points, Point p, double slope) {

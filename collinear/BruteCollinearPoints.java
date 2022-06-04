@@ -9,12 +9,18 @@ public class BruteCollinearPoints {
         checkNullPoints(points);
         checkDuplicatedPoints(points);
 
-        for (int i = 0; i < points.length; i++)
-            for (int j = i + 1; i < points.length; i++)
-                for (int k = j + 1; i < points.length; i++)
-                    for (int l = k + 1; i < points.length; i++)
+        int n = points.length;
+        num = 0;
+        segmentsCache = new LineSegment[n];
+
+        for (int i = 0; i < n; i++)
+            for (int j = i + 1; j < n; j++)
+                for (int k = j + 1; k < n; k++)
+                    for (int l = k + 1; l < n; l++)
                         checkSegment(new Point[]{points[i], points[j], points[k], points[l]});
 
+        if (num == 0)
+            return;
         segments = new LineSegment[num];
         System.arraycopy(segmentsCache, 0, segments, 0, num);
     }

@@ -19,8 +19,6 @@ public class BruteCollinearPoints {
                     for (int l = k + 1; l < n; l++)
                         checkSegment(new Point[]{points[i], points[j], points[k], points[l]});
 
-        if (num == 0)
-            return;
         segments = new LineSegment[num];
         System.arraycopy(segmentsCache, 0, segments, 0, num);
     }
@@ -54,10 +52,12 @@ public class BruteCollinearPoints {
     }
 
     public LineSegment[] segments() {
+        System.out.println(segments.length);
         LineSegment[] new_segments = new LineSegment[segments.length];
         System.arraycopy(segments, 0, new_segments, 0, segments.length);
         return new_segments;
     }
+
 
     private void checkNullPoints(Point[] points) {
         for (int i = 0; i < points.length; i++) {

@@ -16,8 +16,6 @@ public class FastCollinearPoints {
         for (int i = 0; i < n; i++)
             checkSegment(points, i);
 
-        if (num == 0)
-            return;
         segments = new LineSegment[num];
         System.arraycopy(segmentsCache, 0, segments, 0, num);
     }

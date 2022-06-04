@@ -9,56 +9,43 @@ public class FastCollinearPoints {
         checkNullPoints(points);
         checkDuplicatedPoints(points);
 
-        num = 0;
-        segmentsCache = new LineSegment[1];
-
         int n = points.length;
-        for (int i = 0; i < n; i++)
-            checkSegment(points, i);
-
-        segments = new LineSegment[num];
-        System.arraycopy(segmentsCache, 0, segments, 0, num);
-    }
-
-    private void checkSegment(Point[] points, int i) {
-        int n = points.length;
-        Point p = points[i];
         Point[] pointsCopy = new Point[n];
         System.arraycopy(points, 0, pointsCopy, 0, n);
-        Arrays.sort(pointsCopy, 0, n, p.slopeOrder());
+        Arrays.sort(pointsCopy);
 
-        int count = 0;
-        int cur = -1;
-        boolean found = false;
-        double slope = Double.NEGATIVE_INFINITY;
-        for (int j = 0; j < n; j++) {
-            if (p.compareTo(pointsCopy[j]) == 0)
-                continue;
+        num = 0;
+        segmentsCache = new LineSegment[n];
 
-            double tmp = p.slopeTo(pointsCopy[j]);
-            if (tmp != slope) {
-                slope = tmp;
-                if (found) {
-                    segmentsCache[num] = new LineSegment(p, pointsCopy[cur]);
-                    num++;
-                    if (num == segmentsCache.length)
-                        resizeSegmentsCache(num * 2);
+        for (int i = 0; i < n - 3; i++) {
+            Point p = pointsCopy[i];
+            Point[] sortedPoints = new Point[n];  // content length = n - 1, last = null
+            System.arraycopy(pointsCopy, 0, sortedPoints, 0, i);
+            System.arraycopy(pointsCopy, i + 1, sortedPoints, i, n - i - 1);
+            Arrays.sort(sortedPoints, 0, n - 1, p.slopeOrder());
 
-                    count = 0;
-                    cur = -1;
-                    found = false;
-                }
-            } else {
-                count++;
-                if (count > 1) {
-                    found = true;
-                    cur = j;
+            int currentStartIndex = 0;
+            for (int j = 1; j < n; j++) {
+                Point currentStartPoint = sortedPoints[currentStartIndex];
+                Point currentPoint = sortedPoints[j];
+                if (currentPoint == null || currentPoint.slopeTo(p) != currentStartPoint.slopeTo(p)) {
+                    int len = j - currentStartIndex;
+                    if (len >= 3 && currentStartPoint.compareTo(p) > 0) {
+                        segmentsCache[num] = new LineSegment(p, sortedPoints[j - 1]);
+                        num++;
+                        if (num == segmentsCache.length) {
+                            resizeSegmentsCache(num * 2);
+                        }
+                    }
+                    currentStartIndex = j;
                 }
             }
         }
 
+        //
+        segments = new LineSegment[num];
+        System.arraycopy(segmentsCache, 0, segments, 0, num);
     }
-
 
     private void resizeSegmentsCache(int capacity) {
         if (capacity <= segmentsCache.length)

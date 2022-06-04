@@ -9,6 +9,9 @@ public class FastCollinearPoints {
         checkNullPoints(points);
         checkDuplicatedPoints(points);
 
+        num = 0;
+        segmentsCache = new LineSegment[1];
+
         for (int i = 0; i < points.length; i++)
             checkSegment(points, i);
 
@@ -23,14 +26,8 @@ public class FastCollinearPoints {
         Point p = points[i];
         Point[] pointsCopy = new Point[n];
         System.arraycopy(points, 0, pointsCopy, 0, n);
-        Arrays.sort(pointsCopy, 0, n - 1, p.slopeOrder());
+        Arrays.sort(pointsCopy, 0, n, p.slopeOrder());
 
-//        System.out.println("+++++++++++++++++++++++++");
-//        for (Point s : pointsCopy) {
-//            System.out.println(s.toString());
-//        }
-
-        System.out.println("+++++++++++++++++++++++++");
         int count = 0;
         double slope = Double.NEGATIVE_INFINITY;
         for (int j = 0; j < n; j++) {
@@ -38,39 +35,21 @@ public class FastCollinearPoints {
                 continue;
 
             double tmp = p.slopeTo(pointsCopy[j]);
-            System.out.println(tmp);
-//            if (tmp != slope)
-//                slope = tmp;
-//            if (tmp == slope)
-//                count++;
-////            if (count > 1)
-////                addLineSegment(points, p, slope);
-//            if (count > 3) {
-//                System.out.println(p.toString());
-//                System.out.println(slope);
-//                p.drawTo(pointsCopy[j]);
-//                count = 0;
-//            }
-        }
-    }
+            if (tmp != slope) {
+                slope = tmp;
+            } else {
+                count++;
+                if (count > 1) {
+                    count = 0;
+                    segmentsCache[num] = new LineSegment(p, pointsCopy[j]);
 
-    private void addLineSegment(Point[] points, Point p, double slope) {
-        int n = points.length;
-        Point[] tuple = new Point[n];
-
-        int j = 0;
-        for (int i = 0; i < n; i++) {
-            if (p.slopeTo(points[i]) == slope) {
-                tuple[j] = points[i];
-                j++;
+                    num++;
+                    if (num == segmentsCache.length)
+                        resizeSegmentsCache(num * 2);
+                }
             }
         }
-        Arrays.sort(tuple);
-        segmentsCache[num] = new LineSegment(tuple[0], tuple[j]);
 
-        num++;
-        if (num == segmentsCache.length)
-            resizeSegmentsCache(num * 2);
     }
 
 

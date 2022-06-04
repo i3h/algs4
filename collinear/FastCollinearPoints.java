@@ -1,8 +1,8 @@
 import java.util.Arrays;
 
 public class FastCollinearPoints {
+    private final LineSegment[] segments;
     private int num;
-    private LineSegment[] segments;
     private LineSegment[] segmentsCache;
 
     public FastCollinearPoints(Point[] points) {
@@ -74,9 +74,9 @@ public class FastCollinearPoints {
     }
 
     public LineSegment[] segments() {
-        LineSegment[] new_segments = new LineSegment[segments.length];
-        System.arraycopy(segments, 0, new_segments, 0, segments.length);
-        return new_segments;
+        LineSegment[] newSegments = new LineSegment[segments.length];
+        System.arraycopy(segments, 0, newSegments, 0, segments.length);
+        return newSegments;
     }
 
     private void checkNullPoints(Point[] points) {
@@ -87,14 +87,14 @@ public class FastCollinearPoints {
     }
 
     private void checkDuplicatedPoints(Point[] points) {
-        Point[] new_points = new Point[points.length];
-        System.arraycopy(points, 0, new_points, 0, points.length);
-        Arrays.sort(new_points);
-        Point k = new_points[0];
+        Point[] newPoints = new Point[points.length];
+        System.arraycopy(points, 0, newPoints, 0, points.length);
+        Arrays.sort(newPoints);
+        Point k = newPoints[0];
         for (int i = 1; i < points.length; i++) {
-            if (k.compareTo(new_points[i]) == 0)
+            if (k.compareTo(newPoints[i]) == 0)
                 throw new IllegalArgumentException();
-            k = new_points[i];
+            k = newPoints[i];
         }
     }
 }

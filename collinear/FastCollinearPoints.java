@@ -12,7 +12,8 @@ public class FastCollinearPoints {
         num = 0;
         segmentsCache = new LineSegment[1];
 
-        for (int i = 0; i < points.length; i++)
+        int n = points.length;
+        for (int i = 0; i < n; i++)
             checkSegment(points, i);
 
         if (num == 0)
@@ -29,6 +30,8 @@ public class FastCollinearPoints {
         Arrays.sort(pointsCopy, 0, n, p.slopeOrder());
 
         int count = 0;
+        int cur = -1;
+        boolean found = false;
         double slope = Double.NEGATIVE_INFINITY;
         for (int j = 0; j < n; j++) {
             if (p.compareTo(pointsCopy[j]) == 0)
@@ -37,15 +40,21 @@ public class FastCollinearPoints {
             double tmp = p.slopeTo(pointsCopy[j]);
             if (tmp != slope) {
                 slope = tmp;
-            } else {
-                count++;
-                if (count > 1) {
-                    count = 0;
-                    segmentsCache[num] = new LineSegment(p, pointsCopy[j]);
-
+                if (found) {
+                    segmentsCache[num] = new LineSegment(p, pointsCopy[cur]);
                     num++;
                     if (num == segmentsCache.length)
                         resizeSegmentsCache(num * 2);
+
+                    count = 0;
+                    cur = -1;
+                    found = false;
+                }
+            } else {
+                count++;
+                if (count > 1) {
+                    found = true;
+                    cur = j;
                 }
             }
         }
